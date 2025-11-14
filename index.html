@@ -1,14 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comfort Hotel Lille I'Union</title>
+    <style>
+        /* 确保 body 全屏 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        /* iframe 响应式全屏显示 */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* 可选：让 iframe 容器适应页面 */
+        .pdf-container {
+            position: relative;
+            width: 100%;
+            height: 100vh; /* 视口高度 */
+        }
+    </style>
 </head>
 <body>
-    <iframe 
-        src="assets/Room Instruction.pdf" 
-        width="100%" 
-        height="1000px">
-    </iframe>
+    <div class="pdf-container">
+        <iframe src="assets/Room Instruction.pdf"></iframe>
+    </div>
 </body>
 </html>
