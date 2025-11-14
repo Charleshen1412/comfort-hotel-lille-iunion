@@ -1,2 +1,2 @@
-# le-comfort-hotel-lille-lunion
-le-comfort-hotel-lille-lunion website
+# Comfort Hotel Lille I'Union
+Comfort Hotel Lille I'Union Website
