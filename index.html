@@ -1,47 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comfort Hotel Lille I'Union</title>
-    <style>
-        /* 页面重置，避免多余滚动条 */
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden; /* 避免 body 自带滚动条 */
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comfort Hotel Lille I'Union - Room Instructions</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
 
-        /* 页面顶部标题栏 */
-        header {
-            background-color: #004080; /* 酒店风格颜色 */
-            color: white;
-            padding: 15px 20px;
-            font-size: 1.5rem;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+    header {
+        background-color: #004080;
+        color: white;
+        padding: 15px 20px;
+        font-size: 1.5rem;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        flex-shrink: 0;
+    }
 
-        /* PDF iframe 容器 */
-        .pdf-container {
-            width: 100%;
-            height: calc(100% - 60px); /* 扣掉 header 高度 */
-        }
+    #pdf-container {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
+    canvas {
+        margin-bottom: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        border-radius: 5px;
+    }
+</style>
 </head>
 <body>
-    <header>Comfort Hotel Lille I'Union - Room Instructions</header>
-    <div class="pdf-container">
-        <iframe src="assets/Room Instruction.pdf"></iframe>
-    </div>
+<header>Comfort Hotel Lille I'Union - Room Instructions</header>
+<div id="pdf-container"></div>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.min.js"></script>
+<script>
+const url = 'assets/Room Instruction.pdf';
+const container = document.getElementById('pdf-container');
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.worker.min.js';
+
+pdfjsLib.getDocument(url).promise.then(pdf => {
+    for(let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        pdf.getPage(pageNum).then(page => {
+            const viewport = page.getViewport({ scale: 1 });
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            // 根据容器宽度动态设置 scale
+            const containerWidth = container.clientWidth - 20; // 扣掉 padding
+            const scale = containerWidth / viewport.width;
+            const scaledViewport = page.getViewport({ scale });
+
+            canvas.width = scaledViewport.width;
+            canvas.height = scaledViewport.height;
+
+            page.render({ canvasContext: context, viewport: scaledViewport });
+            container.appendChild(canvas);
+        });
+    }
+});
+</script>
 </body>
 </html>
